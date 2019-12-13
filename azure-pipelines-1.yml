@@ -32,3 +32,15 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+Settings
+- task: mspremier.CreateWorkItem.CreateWorkItem-task.CreateWorkItem@1
+  displayName: 'Create work item'
+  inputs:
+    teamProject: 'Parts unlimited'
+    workItemType: bug
+    title: 'bug from pipeline'
+    assignedTo: 'nagaseva.sumanth@ecanarys.com'
+    areaPath: 'Parts unlimited\PUL'
+    iterationPath: '8495b155-7719-4ac1-85ef-6eec897215f7@currentIteration'
+
