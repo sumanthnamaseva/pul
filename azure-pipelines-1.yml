@@ -33,7 +33,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-Settings
 - task: mspremier.CreateWorkItem.CreateWorkItem-task.CreateWorkItem@1
   displayName: 'Create work item'
   inputs:
