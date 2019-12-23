@@ -69,7 +69,7 @@ stages:
          WebsitePhysicalPath: 'C:\agent\artifact'
          WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
          AddBinding: true
-         Bindings: '7777'
+         Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"9898","hostname":"","sslThumbprint":"","sniFlag":false}]}'
 
       - task: IISWebAppDeploymentOnMachineGroup@0
         inputs:
