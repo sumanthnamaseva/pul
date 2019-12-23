@@ -8,7 +8,7 @@ pool:
   demands:
   - msbuild
   - visualstudio
-  - vstest -->
+  - vstest 
 
 stages:
 - stage: build
