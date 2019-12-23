@@ -1,5 +1,3 @@
-
-
 trigger:
 - master
 
@@ -42,10 +40,11 @@ stages:
       inputs:
         SourceFolder: '$(build.sourcesdirectory)'
         Contents: '**/*.json'
-        TargetFolder: '$(build.artifactstagingdirectory)'
+        TargetFolder: 'C:\agent\artifact'
 
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact'
       inputs:
-       PathtoPublish: '$(build.artifactstagingdirectory)'
+       PathtoPublish: 'C:\agent\artifact'
+       ArtifactName: 'drop1'
