@@ -51,7 +51,7 @@ stages:
 
 - stage: Deploy
   jobs:
-    - job: deploy local
+    - job: deploylocal
       steps:
 
       - task: DownloadBuildArtifacts@0
