@@ -1,5 +1,8 @@
-trigger:
-- master
+schedules:
+- cron: "25 14 * * 2-4"
+  branches:
+    include:
+    - master
 
 pool:
   name: Default
@@ -49,29 +52,3 @@ stages:
        PathtoPublish: 'C:\agent\artifact'
        ArtifactName: 'drop1'
 
-- stage: Deploy
-  jobs:
-    - job: deploylocal
-      steps:
-
-      - task: DownloadBuildArtifacts@0
-        inputs:
-         buildType: 'current'
-         downloadType: 'single'
-         artifactName: 'drop1'
-         downloadPath: 'D:\deploy'
-
-      - task: IISWebAppManagementOnMachineGroup@0 
-        inputs:
-         IISDeploymentType: 'IISWebsite'
-         ActionIISWebsite: 'CreateOrUpdateWebsite'
-         WebsiteName: 'Parts unlimited'
-         WebsitePhysicalPath: 'C:\agent\artifact'
-         WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
-         AddBinding: true
-         Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"9898","hostname":"","sslThumbprint":"","sniFlag":false}]}'
-
-      - task: IISWebAppDeploymentOnMachineGroup@0
-        inputs:
-         WebSiteName: 'Parts unlimited'
-         Package: 'C:\agent\artifact'
