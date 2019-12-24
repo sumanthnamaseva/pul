@@ -1,5 +1,8 @@
+trigger:
+ - master
+
 schedules:
-- cron: "25 14 * * 2-4"
+- cron: "27 14 * * 2-4"
   branches:
     include:
     - master
