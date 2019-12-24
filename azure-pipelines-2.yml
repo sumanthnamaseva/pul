@@ -2,7 +2,7 @@ trigger:
  - master
 
 schedules:
-- cron: "29 14 * * 2-4"
+- cron: "32 14 * * TUE"
   branches:
     include:
     - master
