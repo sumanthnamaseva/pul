@@ -5,30 +5,54 @@
 
 trigger:
 - master
+stages:
 
-pool:
-  vmImage: 'VS2017-Win2016t'
+- stage: Build and publish
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  jobs:
+  - job: build
 
-steps:
-- task: NuGetToolInstaller@1
+    pool:
+     vmImage: 'VS2017-Win2016t'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    variables:
+     solution: '**/*.sln'
+     buildPlatform: 'Any CPU'
+     buildConfiguration: 'Release'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+     steps:
+     - task: NuGetToolInstaller@1
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+     - task: NuGetCommand@2
+       inputs:
+         restoreSolution: '$(solution)'
+
+     - task: VSBuild@1
+       inputs:
+         solution: '$(solution)'
+         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+         platform: '$(buildPlatform)'
+         configuration: '$(buildConfiguration)'
+
+     - task: VSTest@2
+       inputs:
+         platform: '$(buildPlatform)'
+         configuration: '$(buildConfiguration)'
+
+
+     - task: CopyFiles@2
+       displayName: 'Copy Files'
+       inputs:
+         SourceFolder: '$(build.sourcesdirectory)'
+         Contents: '**/*.json'
+         TargetFolder: '$(build.artifactstagingdirectory)'
+
+
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish Artifact'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)'
+
+
+
+  
