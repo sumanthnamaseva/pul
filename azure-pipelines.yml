@@ -1,7 +1,4 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
 
 trigger:
 - master
@@ -56,5 +53,35 @@ stages:
          PathtoPublish: '$(build.artifactstagingdirectory)'
 
 
-
+- stage: Deploy
+  jobs:
+  - job: deploy
+    pool:
+     name: 'Default'
   
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        targetPath: '$(Pipeline.Workspace)'
+       
+     
+    - task: IISWebAppManagementOnMachineGroup@0
+      inputs:
+       IISDeploymentType: 'IISWebsite'
+       ActionIISWebsite: 'CreateOrUpdateWebsite'
+       WebsiteName: 'Partsulnew'
+       WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+       WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+       AddBinding: true
+       Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"6666","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+       CreateOrUpdateAppPoolForWebsite: true
+       AppPoolNameForWebsite: 'PULNEW'
+       DotNetVersionForWebsite: 'v4.0'
+       PipeLineModeForWebsite: 'Integrated'
+       AppPoolIdentityForWebsite: 'NetworkService'
+
+    - task: IISWebAppDeploymentOnMachineGroup@0
+      inputs:
+        WebSiteName: 'Partsulnew'
+        Package: '$(Pipeline.Workspace)\**\*.zip'
