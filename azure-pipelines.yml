@@ -7,7 +7,7 @@ trigger:
 - master
 stages:
 
-- stage: Build and publish
+- stage: Buildandpublish
 
   jobs:
   - job: build
