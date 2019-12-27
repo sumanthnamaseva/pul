@@ -30,6 +30,7 @@ stages:
 
     - task: VSBuild@1
       inputs:
+         vsVersion: 15.0
          solution: '$(solution)'
          msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
          platform: '$(buildPlatform)'
