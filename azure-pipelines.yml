@@ -106,9 +106,9 @@ stages:
          - task: IISWebAppManagementOnMachineGroup@0
            displayName: 'Manage IISWebsite'
            inputs:
-             WebsiteName: pul
+             WebsiteName: 'pulproduction'
              AddBinding: true
-             Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"6667","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+             Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"6668","hostname":"","sslThumbprint":"","sniFlag":false}]}'
              CreateOrUpdateAppPoolForWebsite: true
              AppPoolNameForWebsite: pul
              AppPoolIdentityForWebsite: NetworkService
@@ -116,6 +116,6 @@ stages:
          - task: IISWebAppDeploymentOnMachineGroup@0
            displayName: 'Deploy IIS Website/App: '
            inputs:
-             WebSiteName: 'pul'
+             WebSiteName: 'pulproduction'
              Package: '$(Pipeline.Workspace)\**\*.zip'
          
