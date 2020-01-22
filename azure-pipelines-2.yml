@@ -1,0 +1,57 @@
+trigger:
+ - master
+
+schedules:
+- cron: "34 14 * * TUE"
+  branches:
+    include:
+    - master
+
+pool:
+  name: Default
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest 
+
+stages:
+- stage: build
+  jobs:
+  - job: publish
+    steps:
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+       restoreSolution: '**\*.sln'
+
+    - task: VSBuild@1
+      displayName: 'Build solution'
+      inputs:
+        vsVersion: "15.0"
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.stagingDirectory)" /p:IncludeServerNameInBuildInfo=True /p:GenerateBuildInfoConfigFile=true /p:BuildSymbolStorePath="$(SymbolPath)" /p:ReferencePath="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\Extensions\Microsoft\Pex"'
+        platform: '$(BuildPlatform)'
+        configuration: '$(BuildConfiguration)'
+
+    - task: VSTest@2
+      inputs:
+        runInParallel: false
+        codeCoverageEnabled: true
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files'
+      inputs:
+        SourceFolder: '$(build.sourcesdirectory)'
+        Contents: '**/*.json'
+        TargetFolder: 'C:\agent\artifact'
+
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+       PathtoPublish: 'C:\agent\artifact'
+       ArtifactName: 'drop1'
+

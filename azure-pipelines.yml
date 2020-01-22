@@ -1,0 +1,121 @@
+
+
+trigger:
+- none
+stages:
+
+- stage: Buildandpublish
+
+  jobs:
+  - job: build
+
+    pool:
+     vmImage: 'VS2017-Win2016'
+
+    variables:
+     solution: '**/*.sln'
+     buildPlatform: 'Any CPU'
+     buildConfiguration: 'Release'
+
+    steps:
+    - task: NuGetToolInstaller@1
+      displayName: 'Use NuGet '
+
+    - task: NuGetCommand@2
+      inputs:
+         restoreSolution: '$(solution)'
+
+    - task: VSBuild@1
+      inputs:
+         vsVersion: "15.0"
+         solution: '$(solution)'
+         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+         platform: '$(buildPlatform)'
+         configuration: '$(buildConfiguration)'
+
+    - task: VSTest@2
+      inputs:
+         platform: '$(buildPlatform)'
+         configuration: '$(buildConfiguration)'
+
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files'
+      inputs:
+         SourceFolder: '$(build.sourcesdirectory)'
+         Contents: '**/*.json'
+         TargetFolder: '$(build.artifactstagingdirectory)'
+
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)'
+
+
+- stage: Deploy
+  jobs:
+  - job: deploy
+    pool:
+     name: 'PUL'
+  
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        targetPath: '$(Pipeline.Workspace)'
+       
+     
+    - task: IISWebAppManagementOnMachineGroup@0
+      inputs:
+       IISDeploymentType: 'IISWebsite'
+       ActionIISWebsite: 'CreateOrUpdateWebsite'
+       WebsiteName: 'Partsulnew'
+       WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+       WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+       AddBinding: true
+       Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"6666","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+       CreateOrUpdateAppPoolForWebsite: true
+       AppPoolNameForWebsite: 'PULNEW'
+       DotNetVersionForWebsite: 'v4.0'
+       PipeLineModeForWebsite: 'Integrated'
+       AppPoolIdentityForWebsite: 'NetworkService'
+
+    - task: IISWebAppDeploymentOnMachineGroup@0
+      inputs:
+        WebSiteName: 'Partsulnew'
+        Package: '$(Pipeline.Workspace)\**\*.zip'
+
+- stage: DeployToProduction  
+   
+  jobs:
+   - deployment: DeployToProduction
+     pool:
+      name: 'PUL'
+       
+     environment: 'sample for dotnet'
+     strategy:
+      runOnce: 
+        deploy:
+         steps:
+         - task: DownloadPipelineArtifact@2
+           inputs:
+             source: 'current'
+             path: '$(Pipeline.Workspace)'
+
+         - task: IISWebAppManagementOnMachineGroup@0
+           displayName: 'Manage IISWebsite'
+           inputs:
+             WebsiteName: 'pulproduction'
+             AddBinding: true
+             Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"6668","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+             CreateOrUpdateAppPoolForWebsite: true
+             AppPoolNameForWebsite: pul
+             AppPoolIdentityForWebsite: NetworkService
+     
+         - task: IISWebAppDeploymentOnMachineGroup@0
+           displayName: 'Deploy IIS Website/App: '
+           inputs:
+             WebSiteName: 'pulproduction'
+             Package: '$(Pipeline.Workspace)\**\*.zip'
+         
