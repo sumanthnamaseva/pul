@@ -74,11 +74,11 @@ stages:
       inputs:
         IISDeploymentType: 'IISWebsite'
         ActionIISWebsite: 'CreateOrUpdateWebsite'
-        WebsiteName: 'PUL YAML'
+        WebsiteName: 'PULYAML'
         WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
         WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
         AddBinding: true
-        Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"6978","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+        Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"8888","hostname":"","sslThumbprint":"","sniFlag":false}]}'
         CreateOrUpdateAppPoolForWebsite: true
         AppPoolNameForWebsite: 'PULYAML'
         DotNetVersionForWebsite: 'v4.0'
