@@ -72,12 +72,20 @@ stages:
     - task: IISWebAppManagementOnMachineGroup@0
       displayName: 'Manage IISWebsite'
       inputs:
-           WebsiteName: pultest
-           AddBinding: true
-           Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"8888","hostname":"","sslThumbprint":"","sniFlag":false}]}'
-           CreateOrUpdateAppPoolForWebsite: true
-           AppPoolNameForWebsite: pul
-           AppPoolIdentityForWebsite: NetworkService
+        IISDeploymentType: 'IISWebsite'
+        ActionIISWebsite: 'CreateOrUpdateWebsite'
+        WebsiteName: 'pultest'
+        WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+        WebsitePhysicalPathAuth: 'WebsiteWindowsAuth'
+        WebsiteAuthUserName: 'CANARYS\nagasevas'
+        WebsiteAuthUserPassword: 'Qwerty@123'
+        AddBinding: true
+        Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"8888","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+        CreateOrUpdateAppPoolForWebsite: true
+        AppPoolNameForWebsite: 'pul'
+        DotNetVersionForWebsite: 'v4.0'
+        PipeLineModeForWebsite: 'Integrated'
+        AppPoolIdentityForWebsite: 'NetworkService'
     - task: IISWebAppDeploymentOnMachineGroup@0
       inputs:
         WebSiteName: 'PUL YAML'
