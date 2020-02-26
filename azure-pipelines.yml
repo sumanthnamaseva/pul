@@ -76,7 +76,7 @@ stages:
         WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
         WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
         AddBinding: true
-        Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"8888","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+        Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"8085","hostname":"","sslThumbprint":"","sniFlag":false}]}'
         CreateOrUpdateAppPoolForWebsite: true
         AppPoolNameForWebsite: 'PULtest'
         DotNetVersionForWebsite: 'v4.0'
