@@ -54,7 +54,7 @@ stages:
         publishLocation: 'Container'
 
 
-- stage: deploy to local
+- stage: deploytolocal
   jobs:
   - job: deploytolocal
 
