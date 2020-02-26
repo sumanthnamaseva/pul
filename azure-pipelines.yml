@@ -54,6 +54,41 @@ stages:
         publishLocation: 'Container'
 
 
+- stage: deploy to local
+  jobs:
+  - job: deploytolocal
+
+    pool: PUL
+
+    steps:
+             
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+
+    - task: IISWebAppManagementOnMachineGroup@0
+      inputs:
+        IISDeploymentType: 'IISWebsite'
+        ActionIISWebsite: 'CreateOrUpdateWebsite'
+        WebsiteName: 'PUL YAML'
+        WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+        WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+        AddBinding: true
+        Bindings: 'http/All Unassigned:7777:'
+        CreateOrUpdateAppPoolForWebsite: true
+        AppPoolNameForWebsite: 'PUL YAML'
+        DotNetVersionForWebsite: 'v4.0'
+        PipeLineModeForWebsite: 'Integrated'
+        AppPoolIdentityForWebsite: 'NetworkService'
+
+    - task: IISWebAppDeploymentOnMachineGroup@0
+      inputs:
+        WebSiteName: 'PUL YAML'
+        Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
 
 
 
