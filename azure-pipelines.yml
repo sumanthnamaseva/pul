@@ -80,7 +80,7 @@ stages:
         AddBinding: true
         Bindings: 'http/All Unassigned:7777:'
         CreateOrUpdateAppPoolForWebsite: true
-        AppPoolNameForWebsite: 'PUL YAML'
+        AppPoolNameForWebsite: 'PULYAML'
         DotNetVersionForWebsite: 'v4.0'
         PipeLineModeForWebsite: 'Integrated'
         AppPoolIdentityForWebsite: 'NetworkService'
