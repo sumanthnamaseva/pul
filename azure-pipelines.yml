@@ -68,27 +68,23 @@ stages:
         buildType: 'current'
         targetPath: '$(Pipeline.Workspace)'
 
-
     - task: IISWebAppManagementOnMachineGroup@0
-      displayName: 'Manage IISWebsite'
       inputs:
         IISDeploymentType: 'IISWebsite'
         ActionIISWebsite: 'CreateOrUpdateWebsite'
         WebsiteName: 'pultest'
         WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
-        WebsitePhysicalPathAuth: 'WebsiteWindowsAuth'
-        WebsiteAuthUserName: 'CANARYS\nagasevas'
-        WebsiteAuthUserPassword: 'Qwerty@123'
+        WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
         AddBinding: true
         Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"8888","hostname":"","sslThumbprint":"","sniFlag":false}]}'
         CreateOrUpdateAppPoolForWebsite: true
-        AppPoolNameForWebsite: 'pul'
+        AppPoolNameForWebsite: 'PULtest'
         DotNetVersionForWebsite: 'v4.0'
         PipeLineModeForWebsite: 'Integrated'
         AppPoolIdentityForWebsite: 'NetworkService'
     - task: IISWebAppDeploymentOnMachineGroup@0
       inputs:
-        WebSiteName: 'PUL YAML'
+        WebSiteName: 'pultest'
         Package: '$(Pipeline.Workspace)\**\*.zip'
 
 
