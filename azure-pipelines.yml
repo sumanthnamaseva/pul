@@ -56,11 +56,12 @@ stages:
 
 - stage: deploytolocal
   jobs:
-  - job: deploytolocal
+  - deployment: deployto local
 
     pool: PUL
 
     steps:
+    
 
     - task: DownloadPipelineArtifact@2
       inputs:
