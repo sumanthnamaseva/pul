@@ -61,13 +61,11 @@ stages:
     pool: PUL
 
     steps:
-             
-    - task: DownloadBuildArtifacts@0
+
+    - task: DownloadPipelineArtifact@2
       inputs:
         buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop'
-        downloadPath: '$(Pipeline.Workspace)'
+        targetPath: '$(Pipeline.Workspace)'
 
 
     - task: IISWebAppManagementOnMachineGroup@0
@@ -78,13 +76,12 @@ stages:
         WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
         WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
         AddBinding: true
-        Bindings: '{"bindings":[{"protocol":"http","ipAddress":"All Unassigned","port":"8888","hostname":"","sslThumbprint":"","sniFlag":false}]}'
+        Bindings: 'http/All Unassigned:7777:'
         CreateOrUpdateAppPoolForWebsite: true
         AppPoolNameForWebsite: 'PULYAML'
         DotNetVersionForWebsite: 'v4.0'
         PipeLineModeForWebsite: 'Integrated'
         AppPoolIdentityForWebsite: 'NetworkService'
-
     - task: IISWebAppDeploymentOnMachineGroup@0
       inputs:
         WebSiteName: 'PUL YAML'
